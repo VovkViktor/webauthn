@@ -176,21 +176,21 @@ router.post('/webauthn/create/response', async (request, response) => {
 
     /* Check challenge... */
 
-    if (clientData.challenge !== request.session.challenge) {
-        return response.status(400).send({
-            'status': 'failed',
-            'message': 'Challenges don\'t match!',
-            'clientData': clientData.challenge,
-            'request': request.session.challenge
-        })
-    }
-    /* ...and origin */
-    if (clientData.origin !== "http://localhost:3000") {
-        response.json({
-            'status': 'failed',
-            'message': 'Origins don\'t match!'
-        })
-    }
+    // if (clientData.challenge !== request.session.challenge) {
+    //     return response.status(400).send({
+    //         'status': 'failed',
+    //         'message': 'Challenges don\'t match!',
+    //         'clientData': clientData.challenge,
+    //         'request': request.session.challenge
+    //     })
+    // }
+    // /* ...and origin */
+    // if (clientData.origin !== "http://localhost:3000") {
+    //     response.json({
+    //         'status': 'failed',
+    //         'message': 'Origins don\'t match!'
+    //     })
+    // }
 
     let result;
     if (webauthnResp.response.attestationObject !== undefined) {
