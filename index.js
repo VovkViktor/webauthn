@@ -33,8 +33,7 @@ app.use(cookieSession({
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }))
 app.use(cookieParser())
-app.use(express.json(), cors({credentials: true,
-    origin: "https://vovkviktor.github.io/webauthnsite/"}));
+app.use(express.json(), cors({credentials: true}));
 app.use(cors())
 app.use('/api/users', users);
 
