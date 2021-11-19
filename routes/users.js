@@ -140,8 +140,7 @@ router.get('/howami', verify, async (req, res) => {
 
 router.post('/webauthn/create', async (request, response) => {
 
-    let email = request?.body?.email;
-    //let name = request.body.name;
+    let email = request.body.email;
     if (!email) return response.status(400).send({message: 'email is requared'})
 
     let user = await User.findOne({ email });
