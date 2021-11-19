@@ -1,0 +1,35 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "Vovk Viktor",
+  "license": "ISC",
+  "dependencies": {
+    "@fidm/x509": "^1.2.1",
+    "@simplewebauthn/server": "^4.2.0",
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
+    "cbor": "^8.0.2",
+    "cookie-parser": "^1.4.5",
+    "cookie-session": "^1.4.0",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^10.0.0",
+    "elliptic": "^6.5.4",
+    "express": "^4.17.1",
+    "joi": "^17.4.2",
+    "joi-objectid": "^4.0.2",
+    "jsonwebtoken": "^8.5.1",
+    "jsrsasign": "^10.4.1",
+    "mongoose": "^6.0.12",
+    "node-rsa": "^1.1.1",
+    "path": "^0.12.7",
+    "url": "^0.11.0"
+  }
+}
