@@ -180,6 +180,8 @@ router.post('/webauthn/create/response', async (request, response) => {
         return response.status(400).send({
             'status': 'failed',
             'message': 'Challenges don\'t match!',
+            'clientData': clientData.challenge,
+            'request': request.session.challenge
         })
     }
     /* ...and origin */
