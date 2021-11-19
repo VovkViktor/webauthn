@@ -48,8 +48,8 @@ let generateServerMakeCredRequest = (username, displayName) => {
     challenge: randomBase64URLBuffer(32),
 
     rp: {
-      name: "vovkviktor.github.io/webauthnsite",
-      id: 'vovkviktor.github.io/webauthnsite'
+      name: "vovkviktor.github.io",
+      id: 'vovkviktor.github.io'
     },
 
     user: {

@@ -273,7 +273,7 @@ router.post('/webauthn/create/key/response', verify, async (request, response) =
         })
     }
     /* ...and origin */
-    if (clientData.origin !== "https://vovkviktor.github.io/webauthnsite") {
+    if (clientData.origin !== "https://vovkviktor.github.io") {
         response.status(400).send({
             'status': 'failed',
             'message': 'Origins don\'t match!'
