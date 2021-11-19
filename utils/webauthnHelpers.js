@@ -60,7 +60,7 @@ let generateServerMakeCredRequest = (username, displayName) => {
     timeout: 60000,
     attestation: 'direct',
     authenticatorSelection: {
-      authenticatorAttachment: 'cross-platform',
+      authenticatorAttachment: 'platform',
       requireResidentKey: false,
       userVerification: "preferred"
     },
