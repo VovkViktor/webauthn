@@ -35,6 +35,7 @@ app.use(cookieSession({
 app.use(cookieParser())
 app.use(express.json(), cors({credentials: true,
     origin: "https://vovkviktor.github.io/webauthnsite/"}));
+app.use(cors())
 app.use('/api/users', users);
 
 
