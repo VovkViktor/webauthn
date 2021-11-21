@@ -4,7 +4,7 @@ const cbor = require("cbor");
 
 const { verifyPackedAttestation } = require("./verifyPackedAttestation");
 const { verifyAppleAnonymousAttestation } = require("./verifyAppleAttestation");
-const { verifySignature } = require("./verifySignature");
+//const { verifySignature } = require("./verifySignature");
 
 /**
  * U2F Presence constant
@@ -351,14 +351,13 @@ let verifyAuthenticatorAssertionResponse = (
     //   throw new Error(
     //     "Certificate public key does not match public key in authData"
     //   );
-    console.log("authr.publicKey: ", authr.publicKey);
-    console.log("publicKey: ", publicKey);
-
-    response.verified = verifySignature(
-      signature,
-      signatureBase,
-      base64url.toBuffer(authr.publicKey)
+    console.log(
+      "authr.publicKey: ",
+      base64url.toBuffer(authr.publicKey).toString("hex")
     );
+    console.log("publicKey: ", signatureBase.toString("hex"));
+
+    response.verified = verifySignature(signature, signatureBase, publicKey);
 
     if (response.verified) {
       if (response.counter <= authr.counter)
