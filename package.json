@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@fidm/x509": "^1.2.1",
+    "@lapo/asn1js": "^1.2.3",
     "@simplewebauthn/server": "^4.2.0",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
@@ -27,7 +28,7 @@
     "joi": "^17.4.2",
     "joi-objectid": "^4.0.2",
     "jsonwebtoken": "^8.5.1",
-    "jsrsasign": "^10.4.1",
+    "jsrsasign": "^10.5.0",
     "mongoose": "^6.0.12",
     "node-rsa": "^1.1.1",
     "path": "^0.12.7",

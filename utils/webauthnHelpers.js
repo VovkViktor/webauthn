@@ -3,6 +3,7 @@ const base64url = require('base64url');
 const cbor = require('cbor');
 
 const { verifyPackedAttestation } = require('./verifyPackedAttestation')
+const {verifyAppleAnonymousAttestation} = require('./verifyAppleAttestation')
 
 /**
  * U2F Presence constant
@@ -209,7 +210,7 @@ let verifyAuthenticatorAttestationResponse = (webAuthnResponse) => {
 
   console.log('ctapMakeCredResp.fmt: ', ctapMakeCredResp.fmt)
 
-  if (ctapMakeCredResp.fmt === 'fido-u2f' || ctapMakeCredResp.fmt === 'apple') {
+  if (ctapMakeCredResp.fmt === 'fido-u2f') {
     let authrDataStruct = parseMakeCredAuthData(ctapMakeCredResp.authData);
 
     if (!(authrDataStruct.flags & U2F_USER_PRESENTED))
@@ -233,8 +234,10 @@ let verifyAuthenticatorAttestationResponse = (webAuthnResponse) => {
         credID: base64url.encode(authrDataStruct.credID)
       }
     }
-  } else if (ctapMakeCredResp.fmt === 'packed' || ctapMakeCredResp.fmt === 'android-safetynet') {
+  } else if (ctapMakeCredResp.fmt === 'packed') {
     return verifyPackedAttestation(webAuthnResponse);
+  } else if (ctapMakeCredResp.fmt === 'apple') {
+    return verifyAppleAnonymousAttestation(webAuthnResponse)
   }
 
   return response
