@@ -180,15 +180,14 @@ router.post('/webauthn/create/response', async (request, response) => {
         return response.status(400).send({
             'status': 'failed',
             'message': 'Challenges don\'t match!',
-            'clientData': clientData.challenge,
-            'request': request.session.challenge
         })
     }
     /* ...and origin */
-    if (clientData.origin !== "http://localhost:3000") {
+    if (clientData.origin !== "https://learnwebauthn-vb5r9.ondigitalocean.app") {
         response.json({
             'status': 'failed',
-            'message': 'Origins don\'t match!'
+            'message': 'Origins don\'t match!',
+            'origin': clientData.origin
         })
     }
 
