@@ -18,12 +18,12 @@ let U2F_USER_PRESENTED = 0x01;
  * @param  {String} publicKey - PEM encoded public key
  * @return {Boolean}
  */
-// let verifySignature = (signature, data, publicKey) => {
-//   return crypto
-//     .createVerify("SHA256")
-//     .update(data)
-//     .verify(publicKey, signature);
-// };
+let verifySignature = (signature, data, publicKey) => {
+  return crypto
+    .createVerify("SHA256")
+    .update(data)
+    .verify(publicKey, signature);
+};
 
 /**
  * Returns base64url encoded buffer of the given length
@@ -86,7 +86,7 @@ let generateServerGetAssertion = (authenticators) => {
     allowCredentials.push({
       type: "public-key",
       id: authr.credID,
-      transports: ["internal"],
+      //transports: ["internal"],
     });
   }
   return {
