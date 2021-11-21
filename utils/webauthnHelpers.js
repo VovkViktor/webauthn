@@ -355,7 +355,8 @@ let verifyAuthenticatorAssertionResponse = (
       "authr.publicKey: ",
       base64url.toBuffer(authr.publicKey).toString("hex")
     );
-    console.log("publicKey: ", signatureBase.toString("hex"));
+    console.log("signature: ", signature.toString("hex"));
+    console.log("signatureBase: ", signatureBase.toString("hex"));
 
     response.verified = verifySignature(signature, signatureBase, publicKey);
 
