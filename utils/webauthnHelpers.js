@@ -17,7 +17,7 @@ let U2F_USER_PRESENTED = 0x01;
  * @param  {String} publicKey - PEM encoded public key
  * @return {Boolean}
  */
-let verifySignature = async (signature, data, publicKey) => {
+let verifySignature = (signature, data, publicKey) => {
   return crypto
     .createVerify("SHA256")
     .update(data)
@@ -346,11 +346,12 @@ let verifyAuthenticatorAssertionResponse = (
 
     let signature = base64url.toBuffer(webAuthnResponse.response.signature);
 
-    response.verified = await verifySignature(
-      signature,
-      signatureBase,
-      publicKey
-    );
+    // if (ansiKey.toString("hex") !== certPubKeyBuff.toString("hex"))
+    //   throw new Error(
+    //     "Certificate public key does not match public key in authData"
+    //   );
+
+    response.verified = verifySignature(signature, signatureBase, publicKey);
 
     if (response.verified) {
       if (response.counter <= authr.counter)
