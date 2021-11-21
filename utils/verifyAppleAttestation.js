@@ -272,7 +272,7 @@ let verifyAppleAnonymousAttestation = (webAuthnResponse) => {
 
   /* ANSI ECC KEY is 0x04 with X and Y coefficients. But certs have it padded with 0x00 so for simplicity it easier to do it that way */
   let ansiKey = Buffer.concat([
-    Buffer.alloc([0x00, 0x04]),
+    Buffer([0x00, 0x04]),
     coseKey.get(COSEKEYS.x),
     coseKey.get(COSEKEYS.y),
   ]);
