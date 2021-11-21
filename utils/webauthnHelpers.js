@@ -233,7 +233,7 @@ let verifyAuthenticatorAttestationResponse = (webAuthnResponse) => {
         credID: base64url.encode(authrDataStruct.credID)
       }
     }
-  } else if (ctapMakeCredResp.fmt === 'packed') {
+  } else if (ctapMakeCredResp.fmt === 'packed' || ctapMakeCredResp.fmt === 'apple' || ctapMakeCredResp.fmt === 'android-safetynet') {
     return verifyPackedAttestation(webAuthnResponse);
   }
 
@@ -282,7 +282,7 @@ let verifyAuthenticatorAssertionResponse = (webAuthnResponse, authenticators) =>
     authr.fmt === 'packed' ||
     authr.fmt === 'android-safetynet' ||
     authr.fmt === 'android-key' ||
-    authr.fmt === 'none') {
+    authr.fmt === 'none' || authr.fmt === 'apple') {
     let authrDataStruct = parseGetAssertAuthData(authenticatorData);
 
     
