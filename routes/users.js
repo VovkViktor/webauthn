@@ -1,5 +1,5 @@
 const { User, validate, loginValidate } = require('../models/user');
-const {AuthnKey} = require('../models/webAuthnKey');
+const { AuthnKey } = require('../models/webAuthnKey');
 const verify = require('./authVerify')
 const bcrypt = require('bcrypt');
 const express = require('express');
@@ -8,44 +8,46 @@ const base64url = require('base64url');
 
 const router = express.Router();
 const { generateServerMakeCredRequest, verifyAuthenticatorAttestationResponse, verifyAuthenticatorAssertionResponse, generateServerGetAssertion } = require('../utils/webauthnHelpers');
-//const { request } = require('express');
 
-router.post('/register', async (req, res) => {
+
+router.post('/register', async (request, response) => {
     // First Validate The Request
-    const resValid = validate(req.body);
+    const resValid = validate(request.body);
 
     const { error } = resValid
     if (error) {
-        return res.status(400).send({message: error.details[0].message});
+        return response.status(400).send({ message: error.details[0].message });
     }
-
     // Check if this user already exists
-    let user = await User.findOne({ email: req.body.email });
+    let user = await User.findOne({ email: request.body.email });
+
     if (user) {
-        return res.status(400).send({message: 'That user already exists!'});
+        return response.status(400).send({ message: 'That user already exists!' });
     } else {
 
         const salt = await bcrypt.genSalt(10);
 
-        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        const hashedPassword = await bcrypt.hash(request.body.password, salt);
 
         try {
             // Insert the new user if they do not exist yet
             user = new User({
-                email: req.body.email,
+                email: request.body.email,
                 password: hashedPassword,
             });
 
             const createdUser = await user.save();
 
-            const token = jwt.sign({
+            request.session.token = jwt.sign({
                 _id: createdUser._id
             }, process.env.TOKEN_SECRET);
 
-            res.status(200).send({ id: createdUser._id, email: createdUser.email, token: token, isPassword: !!createdUser.password });
+
+
+            response.status(200).send({ id: createdUser._id, email: createdUser.email, isPassword: !!createdUser.password });
 
         } catch (e) {
-            return res.status(500).send(e)
+            return response.status(500).send(e)
         }
 
 
@@ -53,95 +55,94 @@ router.post('/register', async (req, res) => {
 
 });
 
-router.post('/login', async (req, res) => {
-    const user = await User.findOne({ email: req.body.email })
-    if (!user) return res.status(400).send({message: 'Incorrect Email'})
+router.post('/login', async (request, response) => {
+    const user = await User.findOne({ email: request.body.email })
+    if (!user) return response.status(400).send({ message: 'Incorrect Email' })
 
-    const validPassword = await bcrypt.compare(req.body.password, user.password)
+    const validPassword = await bcrypt.compare(request.body.password, user.password)
 
-    if (!validPassword) return res.status(400).send({message: 'Incorrect Password'})
+    if (!validPassword) return response.status(400).send({ message: 'Incorrect Password' })
 
     try {
-        const { error } = await loginValidate.validateAsync(req.body);
+        const { error } = await loginValidate.validateAsync(request.body);
         if (error) {
-            return res.status(400).send({message: error.details[0].message})
+            return response.status(400).send({ message: error.details[0].message })
         }
         else {
-            const token = jwt.sign({
+            request.session.token = jwt.sign({
                 _id: user._id
             }, process.env.TOKEN_SECRET);
 
-            res.send({
+            response.send({
                 email: user.email,
-                token,
                 isPassword: !!user.password,
                 id: user._id
             })
         }
 
     } catch (e) {
-        res.status(500).send(e)//
+        response.status(500).send(e)//
     }
 })
 
-router.post('/add-password', verify, async (req, res) => {
+router.post('/add-password', verify, async (request, response) => {
 
-    const user = req.user;
+    const user = request.user;
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    const hashedPassword = await bcrypt.hash(request.body.password, salt);
 
-    const result = await User.findByIdAndUpdate(user._id, {password: hashedPassword}).exec()
+    const result = await User.findByIdAndUpdate(user._id, { password: hashedPassword }).exec()
 
     const updatedUser = await User.findById(result._id)
 
     try {
 
-            res.send({
-                email: updatedUser.email,
-                isPassword: !!updatedUser.password,
-                id: updatedUser._id
-            })
+        response.send({
+            email: updatedUser.email,
+            isPassword: !!updatedUser.password,
+            id: updatedUser._id
+        })
 
 
     } catch (e) {
-        res.status(500).send(e)//
+        response.status(500).send(e)//
     }
 })
 
-router.get('/authn-keys', verify, async (req, res) => {
+router.get('/authn-keys', verify, async (request, response) => {
     try {
-        const user = req.user;
-        const result = await AuthnKey.find({userId: user._id}, { __v: 0}).exec()
-        res.send(result)
+        const user = request.user;
+        const result = await AuthnKey.find({ userId: user._id }, { __v: 0 }).exec()
+        response.send(result)
     } catch (e) {
-        return res.status(500).send(e)
+        return response.status(500).send(e)
     }
 })
 
-router.delete('/authn-key/delete/:id', verify, async (req, res) => {
+router.delete('/authn-key/delete/:id', verify, async (request, response) => {
     try {
-        const keyId = req.params.id
+        const keyId = request.params.id
         const result = await AuthnKey.findByIdAndDelete(keyId)
-        res.send(result)
+        response.send(result)
     } catch (e) {
-        return res.status(500).send(e)
+        return response.status(500).send(e)
     }
 })
 
-router.get('/howami', verify, async (req, res) => {
+router.get('/howami', verify, async (request, response) => {
     try {
-        const user = req.user;
+        const user = request.user;
         const result = await User.findById(user._id).exec()
-        res.send({ id: result._id, email: result.email, isPassword: !!result.password })
+        response.send({ id: result._id, email: result.email, isPassword: !!result.password })
     } catch (e) {
-        res.status(500).send(e)
+        response.status(500).send(e)
     }
 })
 
 router.post('/webauthn/create', async (request, response) => {
 
     let email = request.body.email;
-    if (!email) return response.status(400).send({message: 'email is requared'})
+    if (!email) return response.status(400).send({ message: 'email is requared' })
 
     let user = await User.findOne({ email });
     if (user) {
@@ -184,7 +185,7 @@ router.post('/webauthn/create/response', async (request, response) => {
     }
     /* ...and origin */
     if (clientData.origin !== "https://learnwebauthn-vb5r9.ondigitalocean.app") {
-        response.json({
+        response.status(400).json({
             'status': 'failed',
             'message': 'Origins don\'t match!',
             'origin': clientData.origin
@@ -196,12 +197,12 @@ router.post('/webauthn/create/response', async (request, response) => {
         /* This is create cred */
         result = verifyAuthenticatorAttestationResponse(webauthnResp);
 
-       
+
     } else if (webauthnResp.response.authenticatorData !== undefined) {
         /* This is get assertion */
         result = verifyAuthenticatorAssertionResponse(webauthnResp, [result.authrInfo]);
     } else {
-        response.json({
+        response.status(400).json({
             'status': 'failed',
             'message': 'Can not determine type of response!'
         })
@@ -211,23 +212,22 @@ router.post('/webauthn/create/response', async (request, response) => {
 
         const newUser = new User({
             email: request.session.email,
-            //authrInfo: result.authrInfo,
             createAt: new Date(),
         });
 
         const newAuthnKey = new AuthnKey({
             userId: newUser._id,
-            key:result.authrInfo
+            key: result.authrInfo
         })
 
         await newUser.save();
         await newAuthnKey.save();
 
-        const token = jwt.sign({
-                _id: newUser._id
-            }, process.env.TOKEN_SECRET);
+        request.session.token = jwt.sign({
+            _id: newUser._id
+        }, process.env.TOKEN_SECRET);
 
-        response.status(200).send({ id: newUser._id, email: newUser.email, token: token, isPassword: !!newUser.password });
+        response.status(200).send({ id: newUser._id, email: newUser.email, isPassword: !!newUser.password });
 
     } else {
         return response.status(400).send({
@@ -239,7 +239,7 @@ router.post('/webauthn/create/response', async (request, response) => {
 
 router.get('/webauthn/create/key', verify, async (request, response) => {
 
-    const {_id} = request.user;
+    const { _id } = request.user;
 
     const user = await User.findById(_id)
 
@@ -286,7 +286,7 @@ router.post('/webauthn/create/key/response', verify, async (request, response) =
         /* This is create cred */
         result = verifyAuthenticatorAttestationResponse(webauthnResp);
 
-       
+
     } else if (webauthnResp.response.authenticatorData !== undefined) {
         /* This is get assertion */
         result = verifyAuthenticatorAssertionResponse(webauthnResp, [result.authrInfo]);
@@ -303,7 +303,7 @@ router.post('/webauthn/create/key/response', verify, async (request, response) =
 
         const newAuthnKey = new AuthnKey({
             userId: user._id,
-            key:result.authrInfo
+            key: result.authrInfo
         })
 
         await newAuthnKey.save();
@@ -318,21 +318,21 @@ router.post('/webauthn/create/key/response', verify, async (request, response) =
     }
 })
 
-router.post('/webauthn/login', async (request, response)=>{
+router.post('/webauthn/login', async (request, response) => {
     const email = request.body.email
-    if (!email) return response.status(400).send({message: 'email is requared'})
-    
-    const user = await User.findOne({email})
+    if (!email) return response.status(400).send({ message: 'email is requared' })
 
-    if (!user) return response.status(400).send({message: 'This user is not exist'})
+    const user = await User.findOne({ email })
 
-    const authnKeys = await AuthnKey.find({userId: user._id})
+    if (!user) return response.status(400).send({ message: 'This user is not exist' })
 
-    if(!authnKeys.length) {
-        return response.status(400).send({message: 'you did not yet create key'})
+    const authnKeys = await AuthnKey.find({ userId: user._id })
+
+    if (!authnKeys.length) {
+        return response.status(400).send({ message: 'you did not yet create key' })
     }
 
-    const _auKeys = authnKeys.map(r=>({...r.key}))
+    const _auKeys = authnKeys.map(r => ({ ...r.key }))
 
     request.session.id = user._id
     const getAssertion = generateServerGetAssertion(_auKeys);
@@ -340,13 +340,13 @@ router.post('/webauthn/login', async (request, response)=>{
     response.status(200).send(getAssertion)
 })
 
-router.post('/webauthn/login/response', async (request, response)=>{
+router.post('/webauthn/login/response', async (request, response) => {
     const data = request.body
     const userId = request.session.id
 
-    const authnKeys = await AuthnKey.find({userId}).exec()
+    const authnKeys = await AuthnKey.find({ userId }).exec()
 
-    const _auKeys = authnKeys.map(r=>({...r.key}))
+    const _auKeys = authnKeys.map(r => ({ ...r.key }))
 
     const result = verifyAuthenticatorAssertionResponse(data, _auKeys);
 
@@ -354,12 +354,13 @@ router.post('/webauthn/login/response', async (request, response)=>{
 
         const user = await User.findById(userId)
 
-        const token = jwt.sign({
+        request.session.token = jwt.sign({
             _id: user._id
         }, process.env.TOKEN_SECRET, { expiresIn: 60 * 10 });
-        response.status(200).send({ id: user._id, email: user.email, token: token, isPassword: !!user.password });
+
+        response.status(200).send({ id: user._id, email: user.email, isPassword: !!user.password });
     } else {
-        return response.status(400).send({message: 'You do not autorize'})
+        return response.status(400).send({ message: 'You do not autorize' })
     }
 })
 
