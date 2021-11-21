@@ -283,7 +283,16 @@ let verifyAppleAnonymousAttestation = (webAuthnResponse) => {
     );
   /* ----- VERIFY PUBLIC KEY MATCHING ENDS ----- */
 
-  return true;
+  //return true;
+  return {
+    verifed: true,
+    authrInfo: {
+      fmt: "apple",
+      publicKey: base64url(ansiKey),
+      counter: authDataStruct.counter,
+      credID: base64url(authDataStruct.credID),
+    },
+  };
 };
 
 module.exports = {
