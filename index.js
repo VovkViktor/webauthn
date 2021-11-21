@@ -36,7 +36,7 @@ app.use(cookieParser())
 //app.use(cors())
 app.use(express.json(), cors({credentials: true, origin: true}));
 
-app.use('/api/users', users);
+app.use('/users', users);
 
 
 

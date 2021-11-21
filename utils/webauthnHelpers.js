@@ -48,8 +48,8 @@ let generateServerMakeCredRequest = (username, displayName) => {
     challenge: randomBase64URLBuffer(32),
 
     rp: {
-      name: "vovkviktor.github.io",
-      id: 'vovkviktor.github.io'
+      name: "learnwebauthn-vb5r9.ondigitalocean.app",
+      id: 'learnwebauthn-vb5r9.ondigitalocean.app'
     },
 
     user: {
@@ -89,7 +89,7 @@ let generateServerGetAssertion = (authenticators) => {
   return {
     challenge: randomBase64URLBuffer(32),
     allowCredentials: allowCredentials,
-    rpId: 'vovkviktor.github.io'
+    rpId: 'learnwebauthn-vb5r9.ondigitalocean.app'
   }
 }
 
