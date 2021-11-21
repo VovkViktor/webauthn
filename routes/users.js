@@ -274,7 +274,7 @@ router.post('/webauthn/create/key/response', verify, async (request, response) =
         })
     }
     /* ...and origin */
-    if (clientData.origin !== "https://vovkviktor.github.io") {
+    if (clientData.origin !== "https://learnwebauthn-vb5r9.ondigitalocean.app") {
         response.status(400).send({
             'status': 'failed',
             'message': 'Origins don\'t match!'
@@ -353,7 +353,6 @@ router.post('/webauthn/login/response', async (request, response) => {
     if (result.verified) {
 
         const user = await User.findById(userId)
-
         request.session.token = jwt.sign({
             _id: user._id
         }, process.env.TOKEN_SECRET, { expiresIn: 60 * 10 });
@@ -362,6 +361,11 @@ router.post('/webauthn/login/response', async (request, response) => {
     } else {
         return response.status(400).send({ message: 'You do not autorize' })
     }
+})
+
+router.get('/logout', verify, async (request, response)=>{
+    request.session.token = null
+    response.end()
 })
 
 module.exports = router;
