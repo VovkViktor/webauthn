@@ -252,7 +252,7 @@ let verifyAuthenticatorAttestationResponse = (webAuthnResponse) => {
     let PEMCertificate = ASN1toPEM(ctapMakeCredResp.attStmt.x5c[0]);
     let signature = ctapMakeCredResp.attStmt.sig;
 
-    response.verifed = await verifySignature(
+    response.verifed = verifySignature(
       signature,
       signatureBase,
       PEMCertificate
@@ -350,6 +350,8 @@ let verifyAuthenticatorAssertionResponse = (
     //   throw new Error(
     //     "Certificate public key does not match public key in authData"
     //   );
+    console.log("authr.publicKey: ", authr.publicKey);
+    console.log("publicKey: ", publicKey);
 
     response.verified = verifySignature(signature, signatureBase, publicKey);
 
