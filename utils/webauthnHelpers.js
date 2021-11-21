@@ -209,7 +209,7 @@ let verifyAuthenticatorAttestationResponse = (webAuthnResponse) => {
 
   console.log('ctapMakeCredResp.fmt: ', ctapMakeCredResp.fmt)
 
-  if (ctapMakeCredResp.fmt === 'fido-u2f') {
+  if (ctapMakeCredResp.fmt === 'fido-u2f' || ctapMakeCredResp.fmt === 'apple') {
     let authrDataStruct = parseMakeCredAuthData(ctapMakeCredResp.authData);
 
     if (!(authrDataStruct.flags & U2F_USER_PRESENTED))
@@ -233,7 +233,7 @@ let verifyAuthenticatorAttestationResponse = (webAuthnResponse) => {
         credID: base64url.encode(authrDataStruct.credID)
       }
     }
-  } else if (ctapMakeCredResp.fmt === 'packed' || ctapMakeCredResp.fmt === 'apple' || ctapMakeCredResp.fmt === 'android-safetynet') {
+  } else if (ctapMakeCredResp.fmt === 'packed' || ctapMakeCredResp.fmt === 'android-safetynet') {
     return verifyPackedAttestation(webAuthnResponse);
   }
 
