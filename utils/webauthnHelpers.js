@@ -4,6 +4,7 @@ const cbor = require("cbor");
 
 const { verifyPackedAttestation } = require("./verifyPackedAttestation");
 const { verifyAppleAnonymousAttestation } = require("./verifyAppleAttestation");
+const { verifySignature } = require("./verifySignature");
 
 /**
  * U2F Presence constant
@@ -17,12 +18,12 @@ let U2F_USER_PRESENTED = 0x01;
  * @param  {String} publicKey - PEM encoded public key
  * @return {Boolean}
  */
-let verifySignature = (signature, data, publicKey) => {
-  return crypto
-    .createVerify("SHA256")
-    .update(data)
-    .verify(publicKey, signature);
-};
+// let verifySignature = (signature, data, publicKey) => {
+//   return crypto
+//     .createVerify("SHA256")
+//     .update(data)
+//     .verify(publicKey, signature);
+// };
 
 /**
  * Returns base64url encoded buffer of the given length
@@ -353,7 +354,11 @@ let verifyAuthenticatorAssertionResponse = (
     console.log("authr.publicKey: ", authr.publicKey);
     console.log("publicKey: ", publicKey);
 
-    response.verified = verifySignature(signature, signatureBase, publicKey);
+    response.verified = verifySignature(
+      signature,
+      signatureBase,
+      base64url.toBuffer(authr.publicKey)
+    );
 
     if (response.verified) {
       if (response.counter <= authr.counter)
