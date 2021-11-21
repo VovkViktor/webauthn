@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const base64url = require("base64url");
 const cbor = require("cbor");
 
+const { verifySignature } = require("./verifySignature");
 const { verifyPackedAttestation } = require("./verifyPackedAttestation");
 const { verifyAppleAnonymousAttestation } = require("./verifyAppleAttestation");
 
@@ -17,12 +18,12 @@ let U2F_USER_PRESENTED = 0x01;
  * @param  {String} publicKey - PEM encoded public key
  * @return {Boolean}
  */
-let verifySignature = (signature, data, publicKey) => {
-  return crypto
-    .createVerify("SHA256")
-    .update(data)
-    .verify(publicKey, signature);
-};
+// let verifySignature = (signature, data, publicKey) => {
+//   return crypto
+//     .createVerify("SHA256")
+//     .update(data)
+//     .verify(publicKey, signature);
+// };
 
 /**
  * Returns base64url encoded buffer of the given length
