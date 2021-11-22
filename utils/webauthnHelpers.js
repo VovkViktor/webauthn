@@ -342,14 +342,12 @@ let verifyAuthenticatorAssertionResponse = (
       base64url.toBuffer(webAuthnResponse.response.clientDataJSON)
     );
 
-    // let signatureBase = Buffer.concat([
-    //   authrDataStruct.rpIdHash,
-    //   authrDataStruct.flagsBuf,
-    //   authrDataStruct.counterBuf,
-    //   clientDataHash,
-    // ]);
-
-    let signatureBase = Buffer.concat([authrDataStruct, clientDataHash]);
+    let signatureBase = Buffer.concat([
+      authrDataStruct.rpIdHash,
+      authrDataStruct.flagsBuf,
+      authrDataStruct.counterBuf,
+      clientDataHash,
+    ]);
 
     let publicKey = ASN1toPEM(base64url.toBuffer(authr.publicKey));
 
