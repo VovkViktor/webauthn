@@ -314,11 +314,15 @@ let verifyAuthenticatorAssertionResponse = (
 ) => {
   let authr = findAuthr(webAuthnResponse.id, authenticators);
 
+  console.log("webAuthnResponse: ", webAuthnResponse);
+  console.log("authr: ", authr);
+
   let authenticatorData = base64url.toBuffer(
     webAuthnResponse.response.authenticatorData
   );
 
   let response = { verified: false };
+
   if (
     authr.fmt === "fido-u2f" ||
     authr.fmt === "packed" ||
@@ -346,17 +350,6 @@ let verifyAuthenticatorAssertionResponse = (
     let publicKey = ASN1toPEM(base64url.toBuffer(authr.publicKey));
 
     let signature = base64url.toBuffer(webAuthnResponse.response.signature);
-
-    // if (ansiKey.toString("hex") !== certPubKeyBuff.toString("hex"))
-    //   throw new Error(
-    //     "Certificate public key does not match public key in authData"
-    //   );
-    console.log(
-      "authr.publicKey: ",
-      base64url.toBuffer(authr.publicKey).toString("hex")
-    );
-    console.log("signature: ", signature.toString("hex"));
-    console.log("signatureBase: ", signatureBase.toString("hex"));
 
     response.verified = verifySignature(signature, signatureBase, publicKey);
 

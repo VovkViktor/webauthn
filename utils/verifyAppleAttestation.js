@@ -282,8 +282,6 @@ let verifyAppleAnonymousAttestation = (webAuthnResponse) => {
       "Certificate public key does not match public key in authData"
     );
   /* ----- VERIFY PUBLIC KEY MATCHING ENDS ----- */
-  console.log("certPubKeyBuff: ", certPubKeyBuff.toString("hex"));
-  console.log("ansiKey: ", ansiKey.toString("hex"));
   //return true;
   return {
     verifed: true,
