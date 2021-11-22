@@ -21,12 +21,6 @@ let COSEKEYS = {
   e: -2,
 };
 
-const COSECRV = {
-  1: "p256",
-  2: "p384",
-  3: "p521",
-};
-
 var hash = (alg, message) => {
   return crypto.createHash(alg).update(message).digest();
 };
@@ -215,6 +209,13 @@ var validateCertificatePath = (certificates) => {
   return true;
 };
 
+function verifySignature(signature, data, publicKey) {
+  return crypto
+    .createVerify("SHA256")
+    .update(data)
+    .verify(publicKey, signature);
+}
+
 let verifyAppleAnonymousAttestation = (webAuthnResponse) => {
   let attestationBuffer = base64url.toBuffer(
     webAuthnResponse.response.attestationObject
@@ -322,12 +323,18 @@ let verifyAppleAnonymousAttestation = (webAuthnResponse) => {
   // fromBase64(base64: string): string;
   /* ----- VERIFY PUBLIC KEY MATCHING ENDS ----- */
 
+  const _buf = base64url.toBuffer(webAuthnResponse.response.signature);
+
+  const validSignature = verifySignature(
+    _buf, // +
+    signatureBaseBuffer, // +
+    certPath[0]
+  );
+
+  console.log("validSignature: ", validSignature);
+
   const publicKey = COSEECDHAtoPKCS(authDataStruct.COSEPublicKey);
 
-  console.log("base64url: ", base64url(ansiKey));
-
-  console.log("publicKey222: ", base64url(publicKey));
-  console.log("publicKey: ", publicKey);
   //return true;
   return {
     verifed: true,
