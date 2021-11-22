@@ -195,3 +195,7 @@ let verifySafetyNetAttestation = (webAuthnResponse) => {
     },
   };
 };
+
+module.exports = {
+  verifySafetyNetAttestation,
+};
