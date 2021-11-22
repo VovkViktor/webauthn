@@ -294,11 +294,9 @@ let verifyAppleAnonymousAttestation = (webAuthnResponse) => {
   // toBase64(base64url: string | Buffer): string;
   // fromBase64(base64: string): string;
   /* ----- VERIFY PUBLIC KEY MATCHING ENDS ----- */
-  console.log("ansiKey: ", ansiKey);
+
   console.log("base64url.encode: ", base64url.encode(ansiKey));
-  console.log("base64url.decode: ", base64url.decode(ansiKey));
-  console.log("base64url.toBase64: ", base64url.toBase64(ansiKey));
-  console.log("base64url.decofromBase64de: ", base64url.fromBase64(ansiKey));
+
   console.log("base64url: ", base64url(ansiKey));
   //return true;
   return {
