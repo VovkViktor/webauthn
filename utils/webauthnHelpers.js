@@ -60,12 +60,12 @@ let generateServerMakeCredRequest = (username, displayName) => {
       displayName: displayName,
     },
     timeout: 60000,
-    attestation: "direct",
-    authenticatorSelection: {
-      authenticatorAttachment: "platform",
-      requireResidentKey: false,
-      userVerification: "preferred",
-    },
+    // attestation: "direct",
+    // authenticatorSelection: {
+    //   authenticatorAttachment: "platform",
+    //   requireResidentKey: false,
+    //   userVerification: "preferred",
+    // },
     pubKeyCredParams: [
       {
         type: "public-key",
