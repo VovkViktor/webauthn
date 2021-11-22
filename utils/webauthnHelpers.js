@@ -335,19 +335,21 @@ let verifyAuthenticatorAssertionResponse = (
 
     let authrDataStruct = parseAuthData(authenticatorData);
 
-    if (!(authrDataStruct.flags & U2F_USER_PRESENTED))
-      throw new Error("User was NOT presented durring authentication!");
+    // if (!(authrDataStruct.flags & U2F_USER_PRESENTED))
+    //   throw new Error("User was NOT presented durring authentication!");
 
     let clientDataHash = hash(
       base64url.toBuffer(webAuthnResponse.response.clientDataJSON)
     );
 
-    let signatureBase = Buffer.concat([
-      authrDataStruct.rpIdHash,
-      authrDataStruct.flagsBuf,
-      authrDataStruct.counterBuf,
-      clientDataHash,
-    ]);
+    // let signatureBase = Buffer.concat([
+    //   authrDataStruct.rpIdHash,
+    //   authrDataStruct.flagsBuf,
+    //   authrDataStruct.counterBuf,
+    //   clientDataHash,
+    // ]);
+
+    let signatureBase = Buffer.concat([authrDataStruct, clientDataHash]);
 
     let publicKey = ASN1toPEM(base64url.toBuffer(authr.publicKey));
 
