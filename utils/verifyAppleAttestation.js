@@ -3,6 +3,7 @@ const base64url = require("base64url");
 const cbor = require("cbor");
 const asn1 = require("@lapo/asn1js");
 const jsrsasign = require("jsrsasign");
+const elliptic = require("elliptic");
 
 /* Apple Webauthn Root
  * Original is here https://www.apple.com/certificateauthority/Apple_WebAuthn_Root_CA.pem
@@ -18,6 +19,12 @@ let COSEKEYS = {
   y: -3,
   n: -1,
   e: -2,
+};
+
+const COSECRV = {
+  1: "p256",
+  2: "p384",
+  3: "p521",
 };
 
 var hash = (alg, message) => {
@@ -282,12 +289,20 @@ let verifyAppleAnonymousAttestation = (webAuthnResponse) => {
       "Certificate public key does not match public key in authData"
     );
   /* ----- VERIFY PUBLIC KEY MATCHING ENDS ----- */
+
+  let ec = new elliptic.ec(COSECRV[coseKey.get(COSEKEYS.crv)]);
+  let key = ec.keyFromPublic(ansiKey);
+
+  console.log("veryfy", key.verify(ansiKey, certPubKeyBuff));
+
+  console.log("key: ", key);
+
   //return true;
   return {
     verifed: true,
     authrInfo: {
       fmt: "apple",
-      publicKey: base64url(ansiKey),
+      publicKey: base64url(key.getPublic()),
       counter: authDataStruct.counter,
       credID: base64url(authDataStruct.credID),
     },
