@@ -3,11 +3,8 @@ const base64url = require("base64url");
 const cbor = require("cbor");
 
 const { verifyPackedAttestation } = require("./verifyPackedAttestation");
-const {
-  verifyAppleAnonymousAttestation,
-  parseAuthData,
-} = require("./verifyAppleAttestation");
-//const { verifySignature } = require("./verifySignature");
+const { verifyAppleAnonymousAttestation } = require("./verifyAppleAttestation");
+const { verifySafetyNetAttestation } = require("./verifySafetynetWebauthn");
 
 /**
  * U2F Presence constant
@@ -274,6 +271,8 @@ let verifyAuthenticatorAttestationResponse = (webAuthnResponse) => {
     return verifyPackedAttestation(webAuthnResponse);
   } else if (ctapMakeCredResp.fmt === "apple") {
     return verifyAppleAnonymousAttestation(webAuthnResponse);
+  } else if (ctapMakeCredResp.fmt === "android-safetynet") {
+    return verifySafetyNetAttestation(webAuthnResponse);
   }
 
   return response;

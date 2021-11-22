@@ -209,13 +209,6 @@ var validateCertificatePath = (certificates) => {
   return true;
 };
 
-function verifySignature(signature, data, publicKey) {
-  return crypto
-    .createVerify("SHA256")
-    .update(data)
-    .verify(publicKey, signature);
-}
-
 let verifyAppleAnonymousAttestation = (webAuthnResponse) => {
   let attestationBuffer = base64url.toBuffer(
     webAuthnResponse.response.attestationObject
@@ -317,21 +310,7 @@ let verifyAppleAnonymousAttestation = (webAuthnResponse) => {
       "Certificate public key does not match public key in authData"
     );
 
-  // encode(input: string | Buffer, encoding?: string): string;
-  // decode(base64url: string, encoding?: string): string;
-  // toBase64(base64url: string | Buffer): string;
-  // fromBase64(base64: string): string;
   /* ----- VERIFY PUBLIC KEY MATCHING ENDS ----- */
-
-  const _buf = base64url.toBuffer(webAuthnResponse.response.signature);
-
-  const validSignature = verifySignature(
-    _buf, // +
-    signatureBaseBuffer, // +
-    certPath[0]
-  );
-
-  console.log("validSignature: ", validSignature);
 
   const publicKey = COSEECDHAtoPKCS(authDataStruct.COSEPublicKey);
 
