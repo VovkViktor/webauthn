@@ -89,10 +89,24 @@ var validateCertificatePath = (certificates) => {
     let issuerCert = new jsrsasign.X509();
     issuerCert.readCertPEM(issuerPem);
 
-    console.log("subjectCert.getIssuerString()", subjectCert.getIssuerString());
-    console.log("issuerCert.getSubjectString()", issuerCert.getSubjectString());
+    console.log(
+      "subjectCert || getIssuerString()",
+      subjectCert.getIssuerString()
+    );
+    console.log(
+      "subjectCert || getSubjectString()",
+      subjectCert.getSubjectString()
+    );
+    console.log(
+      "issuerCert || getSubjectString()",
+      issuerCert.getSubjectString()
+    );
+    console.log(
+      "issuerCert || getIssuerString()",
+      issuerCert.getIssuerString()
+    );
 
-    if (subjectCert.getIssuerString() !== issuerCert.getSubjectString())
+    if (subjectCert.getSubjectString() !== issuerCert.getIssuerString())
       throw new Error(
         "Failed to validate certificate path! Issuers dont match!"
       );
@@ -115,8 +129,6 @@ var validateCertificatePath = (certificates) => {
 };
 
 let verifySafetyNetAttestation = (webAuthnResponse) => {
-  console.log("webAuthnResponse", webAuthnResponse);
-
   let attestationBuffer = base64url.toBuffer(
     webAuthnResponse.response.attestationObject
   );
