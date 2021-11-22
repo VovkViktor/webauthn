@@ -296,4 +296,5 @@ let verifyAppleAnonymousAttestation = (webAuthnResponse) => {
 
 module.exports = {
   verifyAppleAnonymousAttestation,
+  parseAuthData,
 };

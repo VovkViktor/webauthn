@@ -3,7 +3,10 @@ const base64url = require("base64url");
 const cbor = require("cbor");
 
 const { verifyPackedAttestation } = require("./verifyPackedAttestation");
-const { verifyAppleAnonymousAttestation } = require("./verifyAppleAttestation");
+const {
+  verifyAppleAnonymousAttestation,
+  parseAuthData,
+} = require("./verifyAppleAttestation");
 //const { verifySignature } = require("./verifySignature");
 
 /**
@@ -331,6 +334,11 @@ let verifyAuthenticatorAssertionResponse = (
     authr.fmt === "apple"
   ) {
     let authrDataStruct = parseGetAssertAuthData(authenticatorData);
+
+    let _authrData = parseAuthData(authenticatorData);
+
+    console.log("authrDataStruct: ", authrDataStruct);
+    console.log("_authrData: ", _authrData);
 
     if (!(authrDataStruct.flags & U2F_USER_PRESENTED))
       throw new Error("User was NOT presented durring authentication!");
