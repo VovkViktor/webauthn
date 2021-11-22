@@ -112,6 +112,8 @@ var validateCertificatePath = (certificates) => {
 };
 
 let verifySafetyNetAttestation = (webAuthnResponse) => {
+  console.log("webAuthnResponse", webAuthnResponse);
+
   let attestationBuffer = base64url.toBuffer(
     webAuthnResponse.response.attestationObject
   );
@@ -159,8 +161,6 @@ let verifySafetyNetAttestation = (webAuthnResponse) => {
       "-----BEGIN CERTIFICATE-----\n" + pemcert + "-----END CERTIFICATE-----"
     );
   });
-
-  console.log("certPath: ", certPath);
 
   if (getCertificateSubject(certPath[0]).CN !== "attest.android.com")
     throw new Error('The common name is not set to "attest.android.com"!');
