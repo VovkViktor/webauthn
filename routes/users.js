@@ -295,7 +295,7 @@ router.post(
 
     let webauthnResp = request.body;
 
-    console.log("webauthnResp", webauthnResp);
+    //console.log("webauthnResp", webauthnResp);
 
     let clientData = JSON.parse(
       base64url.decode(webauthnResp.response.clientDataJSON)
