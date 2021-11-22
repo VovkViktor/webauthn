@@ -106,7 +106,7 @@ var validateCertificatePath = (certificates) => {
       issuerCert.getIssuerString()
     );
 
-    if (subjectCert.getSubjectString() !== issuerCert.getIssuerString())
+    if (subjectCert.getIssuerString() !== issuerCert.getSubjectString())
       throw new Error(
         "Failed to validate certificate path! Issuers dont match!"
       );
