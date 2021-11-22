@@ -119,10 +119,6 @@ let verifySafetyNetAttestation = (webAuthnResponse) => {
 
   const authenticatorDataStruct = parseAuthData(attestationStruct.authData);
 
-  console.log("attestationStruct: ", attestationStruct);
-
-  console.log("authenticatorDataStruct: ", authenticatorDataStruct);
-
   let jwsString = attestationStruct.attStmt.response.toString("utf8");
   let jwsParts = jwsString.split(".");
 
@@ -135,10 +131,12 @@ let verifySafetyNetAttestation = (webAuthnResponse) => {
     "sha256",
     base64url.toBuffer(webAuthnResponse.response.clientDataJSON)
   );
+
   let nonceBase = Buffer.concat([
     attestationStruct.authData,
     clientDataHashBuf,
   ]);
+
   let nonceBuffer = hash("sha256", nonceBase);
   let expectedNonce = nonceBuffer.toString("base64");
 
@@ -161,6 +159,8 @@ let verifySafetyNetAttestation = (webAuthnResponse) => {
       "-----BEGIN CERTIFICATE-----\n" + pemcert + "-----END CERTIFICATE-----"
     );
   });
+
+  console.log("certPath: ", certPath);
 
   if (getCertificateSubject(certPath[0]).CN !== "attest.android.com")
     throw new Error('The common name is not set to "attest.android.com"!');
