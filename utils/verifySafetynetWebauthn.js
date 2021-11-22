@@ -112,16 +112,16 @@ var validateCertificatePath = (certificates) => {
 };
 
 let verifySafetyNetAttestation = (webAuthnResponse) => {
-  console.log("webAuthnResponse: ", webAuthnResponse);
-
-  const authenticatorDataStruct = parseAuthData(webAuthnResponse.authData);
-
-  console.log("authenticatorDataStruct: ", authenticatorDataStruct);
-
   let attestationBuffer = base64url.toBuffer(
     webAuthnResponse.response.attestationObject
   );
   let attestationStruct = cbor.decodeAllSync(attestationBuffer)[0];
+
+  const authenticatorDataStruct = parseAuthData(attestationStruct.authData);
+
+  console.log("attestationStruct: ", attestationStruct);
+
+  console.log("authenticatorDataStruct: ", authenticatorDataStruct);
 
   let jwsString = attestationStruct.attStmt.response.toString("utf8");
   let jwsParts = jwsString.split(".");
