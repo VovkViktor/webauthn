@@ -88,6 +88,32 @@ let containsASN1Tag = (seq, tag) => {
   return false;
 };
 
+let COSEECDHAtoPKCS = (COSEPublicKey) => {
+  /* 
+     +------+-------+-------+---------+----------------------------------+
+     | name | key   | label | type    | description                      |
+     |      | type  |       |         |                                  |
+     +------+-------+-------+---------+----------------------------------+
+     | crv  | 2     | -1    | int /   | EC Curve identifier - Taken from |
+     |      |       |       | tstr    | the COSE Curves registry         |
+     |      |       |       |         |                                  |
+     | x    | 2     | -2    | bstr    | X Coordinate                     |
+     |      |       |       |         |                                  |
+     | y    | 2     | -3    | bstr /  | Y Coordinate                     |
+     |      |       |       | bool    |                                  |
+     |      |       |       |         |                                  |
+     | d    | 2     | -4    | bstr    | Private key                      |
+     +------+-------+-------+---------+----------------------------------+
+  */
+
+  let coseStruct = cbor.decodeAllSync(COSEPublicKey)[0];
+  let tag = Buffer.from([0x04]);
+  let x = coseStruct.get(-2);
+  let y = coseStruct.get(-3);
+
+  return Buffer.concat([tag, x, y]);
+};
+
 var parseAuthData = (buffer) => {
   let rpIdHash = buffer.slice(0, 32);
   buffer = buffer.slice(32);
@@ -196,6 +222,7 @@ let verifyAppleAnonymousAttestation = (webAuthnResponse) => {
   let attestationStruct = cbor.decodeAllSync(attestationBuffer)[0];
 
   let authDataStruct = parseAuthData(attestationStruct.authData);
+
   let clientDataHashBuf = hash(
     "sha256",
     base64url.toBuffer(webAuthnResponse.response.clientDataJSON)
@@ -295,15 +322,18 @@ let verifyAppleAnonymousAttestation = (webAuthnResponse) => {
   // fromBase64(base64: string): string;
   /* ----- VERIFY PUBLIC KEY MATCHING ENDS ----- */
 
-  console.log("base64url.encode: ", base64url.encode(ansiKey));
+  const publicKey = COSEECDHAtoPKCS(authDataStruct.COSEPublicKey);
 
   console.log("base64url: ", base64url(ansiKey));
+
+  console.log("publicKey222: ", base64url(publicKey));
+  console.log("publicKey: ", publicKey);
   //return true;
   return {
     verifed: true,
     authrInfo: {
       fmt: "apple",
-      publicKey: base64url.encode(ansiKey),
+      publicKey: base64url(publicKey),
       counter: authDataStruct.counter,
       credID: base64url(authDataStruct.credID),
     },
