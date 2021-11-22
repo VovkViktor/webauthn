@@ -314,12 +314,11 @@ let verifyAuthenticatorAssertionResponse = (
 ) => {
   let authr = findAuthr(webAuthnResponse.id, authenticators);
 
-  console.log("webAuthnResponse: ", webAuthnResponse);
-  console.log("authr: ", authr);
-
   let authenticatorData = base64url.toBuffer(
     webAuthnResponse.response.authenticatorData
   );
+
+  console.log("authenticatorData: ", authenticatorData);
 
   let response = { verified: false };
 

@@ -385,6 +385,25 @@ router.post("/webauthn/login/response", async (request, response) => {
 
   const _auKeys = authnKeys.map((r) => ({ ...r.key }));
 
+  let clientData = JSON.parse(base64url.decode(data.response.clientDataJSON));
+
+  /* Check challenge... */
+
+  if (clientData.challenge !== request.session.challenge) {
+    return response.status(400).send({
+      status: "failed",
+      message: "Challenges don't match!",
+    });
+  }
+  /* ...and origin */
+  if (clientData.origin !== "https://learnwebauthn-vb5r9.ondigitalocean.app") {
+    response.status(400).json({
+      status: "failed",
+      message: "Origins don't match!",
+      origin: clientData.origin,
+    });
+  }
+
   const result = verifyAuthenticatorAssertionResponse(data, _auKeys);
 
   if (result.verified) {
