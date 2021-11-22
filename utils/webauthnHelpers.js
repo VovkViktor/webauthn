@@ -321,8 +321,6 @@ let verifyAuthenticatorAssertionResponse = (
     webAuthnResponse.response.authenticatorData
   );
 
-  console.log("authenticatorData: ", authenticatorData);
-
   let response = { verified: false };
 
   if (
@@ -333,12 +331,9 @@ let verifyAuthenticatorAssertionResponse = (
     authr.fmt === "none" ||
     authr.fmt === "apple"
   ) {
-    let authrDataStruct = parseGetAssertAuthData(authenticatorData);
+    //let authrDataStruct = parseGetAssertAuthData(authenticatorData);
 
-    let _authrData = parseAuthData(authenticatorData);
-
-    console.log("authrDataStruct: ", authrDataStruct);
-    console.log("_authrData: ", _authrData);
+    let authrDataStruct = parseAuthData(authenticatorData);
 
     if (!(authrDataStruct.flags & U2F_USER_PRESENTED))
       throw new Error("User was NOT presented durring authentication!");
