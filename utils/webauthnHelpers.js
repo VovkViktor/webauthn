@@ -311,6 +311,10 @@ let parseGetAssertAuthData = (buffer) => {
   return { rpIdHash, flagsBuf, flags, counter, counterBuf };
 };
 
+function checkPEM(pubKey) {
+  return pubKey.toString("base64").includes("BEGIN");
+}
+
 let verifyAuthenticatorAssertionResponse = (
   webAuthnResponse,
   authenticators
@@ -331,12 +335,10 @@ let verifyAuthenticatorAssertionResponse = (
     authr.fmt === "none" ||
     authr.fmt === "apple"
   ) {
-    //let authrDataStruct = parseGetAssertAuthData(authenticatorData);
+    let authrDataStruct = parseGetAssertAuthData(authenticatorData);
 
-    let authrDataStruct = parseAuthData(authenticatorData);
-
-    // if (!(authrDataStruct.flags & U2F_USER_PRESENTED))
-    //   throw new Error("User was NOT presented durring authentication!");
+    if (!(authrDataStruct.flags & U2F_USER_PRESENTED))
+      throw new Error("User was NOT presented durring authentication!");
 
     let clientDataHash = hash(
       base64url.toBuffer(webAuthnResponse.response.clientDataJSON)
@@ -349,7 +351,11 @@ let verifyAuthenticatorAssertionResponse = (
       clientDataHash,
     ]);
 
-    let publicKey = ASN1toPEM(base64url.toBuffer(authr.publicKey));
+    //let publicKey = ASN1toPEM(base64url.toBuffer(authr.publicKey));
+
+    const publicKey = checkPEM(authr.publicKey)
+      ? authr.publicKey.toString("base64")
+      : ASN1toPEM(base64url.toBuffer(authr.publicKey));
 
     let signature = base64url.toBuffer(webAuthnResponse.response.signature);
 
