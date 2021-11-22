@@ -288,15 +288,18 @@ let verifyAppleAnonymousAttestation = (webAuthnResponse) => {
     throw new Error(
       "Certificate public key does not match public key in authData"
     );
+
+  // encode(input: string | Buffer, encoding?: string): string;
+  // decode(base64url: string, encoding?: string): string;
+  // toBase64(base64url: string | Buffer): string;
+  // fromBase64(base64: string): string;
   /* ----- VERIFY PUBLIC KEY MATCHING ENDS ----- */
-
-  let ec = new elliptic.ec(COSECRV[coseKey.get(COSEKEYS.crv)]);
-  let key = ec.keyFromPublic(ansiKey);
-
-  console.log("veryfy", key.verify(ansiKey, certPubKeyBuff));
-
-  console.log("key: ", key);
-
+  console.log("ansiKey: ", ansiKey);
+  console.log("base64url.encode: ", base64url.encode(ansiKey));
+  console.log("base64url.decode: ", base64url.decode(ansiKey));
+  console.log("base64url.toBase64: ", base64url.toBase64(ansiKey));
+  console.log("base64url.decofromBase64de: ", base64url.fromBase64(ansiKey));
+  console.log("base64url: ", base64url(ansiKey));
   //return true;
   return {
     verifed: true,
