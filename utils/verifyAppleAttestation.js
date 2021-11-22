@@ -302,7 +302,7 @@ let verifyAppleAnonymousAttestation = (webAuthnResponse) => {
     verifed: true,
     authrInfo: {
       fmt: "apple",
-      publicKey: base64url(key.getPublic()),
+      publicKey: base64url(ansiKey),
       counter: authDataStruct.counter,
       credID: base64url(authDataStruct.credID),
     },
