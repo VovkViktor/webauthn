@@ -431,7 +431,7 @@ router.post("/webauthn/login/response", async (request, response) => {
   }
 });
 
-router.get("/logout", verify, async (request, response) => {
+router.get("/logout", async (request, response) => {
   request.session.token = null;
   response.end();
 });
