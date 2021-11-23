@@ -11,9 +11,10 @@ const AuthnKey = mongoose.model(
       type: Object,
       required: true,
     },
-    dataCreate: {
-      type: Date,
-      default: new Date(),
+    dateCreate: {
+      type: Number,
+      required: true,
+      default: new Date().getTime,
     },
   })
 );
