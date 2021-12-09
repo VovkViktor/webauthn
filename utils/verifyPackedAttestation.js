@@ -153,7 +153,9 @@ let verifyPackedAttestation = (webAuthnResponse) => {
   let signatureBuffer = attestationStruct.attStmt.sig;
   let signatureIsValid = false;
 
+  console.log("attestationStruct: ", attestationStruct);
   if (attestationStruct.attStmt.x5c) {
+    console.log("1");
     /* ----- Verify FULL attestation ----- */
     let leafCert = base64ToPem(
       attestationStruct.attStmt.x5c[0].toString("base64")
@@ -205,9 +207,11 @@ let verifyPackedAttestation = (webAuthnResponse) => {
 
     /* ----- Verify FULL attestation ENDS ----- */
   } else if (attestationStruct.attStmt.ecdaaKeyId) {
+    console.log("2");
     throw new Error("ECDAA IS NOT SUPPORTED YET!");
   } else {
     /* ----- Verify SURROGATE attestation ----- */
+    console.log("3");
     let pubKeyCose = cbor.decodeAllSync(authDataStruct.COSEPublicKey)[0];
     let hashAlg = COSEALGHASH[pubKeyCose.get(COSEKEYS.alg)];
     if (pubKeyCose.get(COSEKEYS.kty) === COSEKTY.EC2) {
@@ -233,6 +237,7 @@ let verifyPackedAttestation = (webAuthnResponse) => {
         },
       };
     } else if (pubKeyCose.get(COSEKEYS.kty) === COSEKTY.RSA) {
+      console.log("4");
       let signingScheme = COSERSASCHEME[pubKeyCose.get(COSEKEYS.alg)];
 
       let key = new NodeRSA(undefined, { signingScheme });
@@ -256,6 +261,7 @@ let verifyPackedAttestation = (webAuthnResponse) => {
         },
       };
     } else if (pubKeyCose.get(COSEKEYS.kty) === COSEKTY.OKP) {
+      console.log("5");
       let x = pubKeyCose.get(COSEKEYS.x);
       let signatureBaseHash = hash(hashAlg, signatureBaseBuffer);
 
