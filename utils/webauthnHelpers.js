@@ -266,7 +266,7 @@ let verifyAuthenticatorAttestationResponse = (webAuthnResponse) => {
   let ctapMakeCredResp = cbor.decodeAllSync(attestationBuffer)[0];
 
   let response = { verifed: false };
-
+  console.log("ctapMakeCredResp: ", ctapMakeCredResp);
   if (ctapMakeCredResp.fmt === "fido-u2f") {
     let authrDataStruct = parseMakeCredAuthData(ctapMakeCredResp.authData);
 
