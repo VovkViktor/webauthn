@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const base64url = require("base64url");
 
 const router = express.Router();
+
 const {
   generateServerMakeCredRequest,
   verifyAuthenticatorAttestationResponse,

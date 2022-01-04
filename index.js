@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 //Joi.objectId = require('joi-objectid')(Joi);
 const mongoose = require("mongoose");
 const users = require("./routes/users");
+const todos = require("./routes/todos");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
@@ -40,3 +41,4 @@ app.use(cookieParser());
 app.use(express.json(), cors({ credentials: true, origin: true }));
 
 app.use("/users", users);
+app.use("/todos", todos);
