@@ -10,15 +10,11 @@ router.get("/", verify, async (req, res) => {
     const postId = parseUrl.get("id");
 
     if (postId) {
-      const result = await Todos.findById(postId, {}, { lean: true });
+      const result = await Todos.findById(postId);
       return res.status(200).send(result);
     }
 
-    const result = await Todos.find(
-      { userId: req.user._id },
-      {},
-      { lean: true }
-    );
+    const result = await Todos.find({ userId: req.user._id });
 
     res.status(200).json(result);
   } catch (error) {
