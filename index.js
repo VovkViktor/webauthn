@@ -35,7 +35,7 @@ app.use(
     // Cookie Options
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     sameSite: "none",
-    httpOnly: false,
+    domain: "localhost",
   })
 );
 app.use(cookieParser());
