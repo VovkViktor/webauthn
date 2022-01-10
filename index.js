@@ -34,8 +34,8 @@ app.use(
     keys: [crypto.randomBytes(32).toString("hex")],
     // Cookie Options
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    sameSite: "none",
-    secure: true,
+    // sameSite: "none",
+    // secure: true,
   })
 );
 app.use(cookieParser());
