@@ -82,17 +82,20 @@ router.post("/login", async (request, response) => {
     if (error) {
       return response.status(400).send({ message: error.details[0].message });
     } else {
-      request.session.token = jwt.sign(
+      const _token = jwt.sign(
         {
           _id: user._id,
         },
         process.env.TOKEN_SECRET
       );
 
+      request.session.token = _token;
+
       response.send({
         email: user.email,
         isPassword: !!user.password,
         id: user._id,
+        token: _token,
       });
     }
   } catch (e) {
