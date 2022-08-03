@@ -51,7 +51,7 @@ let generateServerMakeCredRequest = (username, displayName) => {
 
     rp: {
       name: "learnwebauthn-vb5r9.ondigitalocean.app",
-      //id: "learnwebauthn-vb5r9.ondigitalocean.app",
+      id: "learnwebauthn-vb5r9.ondigitalocean.app",
     },
     // extensions: {
     //   txAuthSimple: "",
