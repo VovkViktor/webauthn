@@ -51,17 +51,17 @@ let generateServerMakeCredRequest = (username, displayName) => {
 
     rp: {
       name: "learnwebauthn-vb5r9.ondigitalocean.app",
-      id: "learnwebauthn-vb5r9.ondigitalocean.app",
+      //id: "learnwebauthn-vb5r9.ondigitalocean.app",
     },
-    extensions: {
-      txAuthSimple: "",
-    },
+    // extensions: {
+    //   txAuthSimple: "",
+    // },
     user: {
       id: randomBase64URLBuffer(8),
       name: username,
       displayName: displayName,
     },
-    timeout: 60000,
+    //timeout: 60000,
     attestation: "direct",
     authenticatorSelection: {
       authenticatorAttachment: "platform",
@@ -69,46 +69,8 @@ let generateServerMakeCredRequest = (username, displayName) => {
       userVerification: "discouraged", //authenticatorAttachment: "platform",
     },
     pubKeyCredParams: [
-      {
-        type: "public-key",
-        alg: -7,
-      },
-      {
-        type: "public-key",
-        alg: -35,
-      },
-      {
-        type: "public-key",
-        alg: -36,
-      },
-      {
-        type: "public-key",
-        alg: -257,
-      },
-      {
-        type: "public-key",
-        alg: -258,
-      },
-      {
-        type: "public-key",
-        alg: -259,
-      },
-      {
-        type: "public-key",
-        alg: -37,
-      },
-      {
-        type: "public-key",
-        alg: -38,
-      },
-      {
-        type: "public-key",
-        alg: -39,
-      },
-      {
-        type: "public-key",
-        alg: -8,
-      },
+      { type: "public-key", alg: -7 },
+      { type: "public-key", alg: -257 },
     ],
   };
 };
@@ -266,7 +228,9 @@ let verifyAuthenticatorAttestationResponse = (webAuthnResponse) => {
   let ctapMakeCredResp = cbor.decodeAllSync(attestationBuffer)[0];
 
   let response = { verifed: false };
+
   console.log("ctapMakeCredResp: ", ctapMakeCredResp);
+
   if (ctapMakeCredResp.fmt === "fido-u2f") {
     let authrDataStruct = parseMakeCredAuthData(ctapMakeCredResp.authData);
 
