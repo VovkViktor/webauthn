@@ -51,7 +51,7 @@ let generateServerMakeCredRequest = (username, displayName) => {
 
     rp: {
       name: "learnwebauthn-vb5r9.ondigitalocean.app",
-      id: "learnwebauthn-vb5r9.ondigitalocean.app",
+      //id: "learnwebauthn-vb5r9.ondigitalocean.app",
     },
     // extensions: {
     //   txAuthSimple: "",
@@ -69,8 +69,46 @@ let generateServerMakeCredRequest = (username, displayName) => {
       userVerification: "discouraged", //authenticatorAttachment: "platform",
     },
     pubKeyCredParams: [
-      { type: "public-key", alg: -7 },
-      { type: "public-key", alg: -257 },
+      {
+        type: "public-key",
+        alg: -7,
+      },
+      {
+        type: "public-key",
+        alg: -35,
+      },
+      {
+        type: "public-key",
+        alg: -36,
+      },
+      {
+        type: "public-key",
+        alg: -257,
+      },
+      {
+        type: "public-key",
+        alg: -258,
+      },
+      {
+        type: "public-key",
+        alg: -259,
+      },
+      {
+        type: "public-key",
+        alg: -37,
+      },
+      {
+        type: "public-key",
+        alg: -38,
+      },
+      {
+        type: "public-key",
+        alg: -39,
+      },
+      {
+        type: "public-key",
+        alg: -8,
+      },
     ],
   };
 };
